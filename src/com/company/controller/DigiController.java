@@ -38,10 +38,19 @@ public class DigiController implements Initializable {
     private TextField in2;
 
     @FXML
+    private TextField search;
+
+    @FXML
+    private Button searchBT;
+
+    @FXML
     private ScrollPane SP;
 
     @FXML
     private AnchorPane ANP;
+
+    @FXML
+    private AnchorPane AP2;
 
     @FXML
     private GridPane GP;
@@ -52,6 +61,8 @@ public class DigiController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        searchBT.setOnMouseEntered(e -> searchBT.setStyle("-fx-background-color: #2d7945;"));
+        searchBT.setOnMouseExited(e -> searchBT.setStyle("-fx-background-color: #2b342b;"));
 
         submit.setOnMouseEntered(e -> submit.setStyle("-fx-background-color: #2d7945;"));
         submit.setOnMouseExited(e -> submit.setStyle("-fx-background-color: #2b342b;"));
@@ -78,6 +89,9 @@ public class DigiController implements Initializable {
         input.setOnAction(e -> {
             if (check_button != 1){
                 input.setStyle("-fx-background-color: #044b7a");
+                AP2.setVisible(false);
+                ANP.setVisible(true);
+                result.setStyle("-fx-background-color: black");
                 check_button = 1;
             }
         });
@@ -93,7 +107,11 @@ public class DigiController implements Initializable {
         result.setOnAction(e -> {
             if (check_button != 2){
                 result.setStyle("-fx-background-color: #044b7a");
+                AP2.setVisible(true);
+                ANP.setVisible(false);
+                input.setStyle("-fx-background-color: black");
             }
+            check_button = 2;
         });
     }
 
