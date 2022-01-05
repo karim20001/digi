@@ -47,7 +47,7 @@ public class DigiController implements Initializable {
     private GridPane GP;
 
     private int check_button = 1;
-    private ArrayList<TextField> textFields = new ArrayList<>();
+    private final ArrayList<TextField> textFields = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,9 +58,11 @@ public class DigiController implements Initializable {
 
         plus.setOnMouseEntered(e -> plus.setStyle("-fx-background-color: #2d7945;"));
         plus.setOnMouseExited(e -> plus.setStyle("-fx-background-color: #2b342b;"));
+        plus.setOnAction(e -> addNew_field());
 
         remove.setOnMouseEntered(e -> remove.setStyle("-fx-background-color: #2d7945;"));
         remove.setOnMouseExited(e -> remove.setStyle("-fx-background-color: #2b342b;"));
+        remove.setOnAction(e -> removeNode());
 
         in1.textProperty().addListener(e -> create_input());
 
@@ -95,19 +97,39 @@ public class DigiController implements Initializable {
         });
     }
 
+    public void removeNode() {
+
+        if (textFields.size() > 0) {
+            GP.getChildren().remove(textFields.get(textFields.size() - 1));
+            textFields.remove(textFields.get(textFields.size() - 1));
+        }
+    }
+
+    public void addNew_field() {
+
+        TextField textField = new TextField();
+        textField.setStyle("-fx-background-color: #8f8d8d; -fx-text-fill: white");
+        textFields.add(textField);
+
+        int row = GP.getRowCount();
+        int col = GP.getChildren().size() % 4;
+        if (col == 0)
+            row++;
+        GP.add(textField, col, row - 1);
+    }
+
     public void create_input (){
+
         GP.getChildren().clear();
         textFields.clear();
 
         if (Objects.equals(in1.getText(), "")) return;
 
         int number = Integer.parseInt(in1.getText());
-
         if (number < 1) return;
 
         for (int i = 0, row = 0, col = 0; i < number; i++, col++){
             TextField textField = new TextField();
-
             textField.setStyle("-fx-background-color: #8f8d8d; -fx-text-fill: white");
             textFields.add(textField);
 
@@ -117,7 +139,6 @@ public class DigiController implements Initializable {
                 row++;
                 col = -1;
             }
-
         }
     }
 
