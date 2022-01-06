@@ -107,7 +107,7 @@
          <children>
             <ScrollPane layoutY="50.0" prefHeight="337.0" prefWidth="469.0" style="-fx-background-color: #2b342b;" stylesheets="@theCss.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <content>
-                  <AnchorPane prefHeight="322.0" prefWidth="457.0">
+                  <AnchorPane fx:id="treeANP" prefHeight="322.0" prefWidth="457.0">
                      <children>
                         <Line endX="158.5" layoutX="101.0" startX="-100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>

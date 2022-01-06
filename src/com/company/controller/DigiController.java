@@ -8,6 +8,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,10 +59,14 @@ public class DigiController implements Initializable {
     private AnchorPane AP2;
 
     @FXML
+    private AnchorPane treeANP;
+
+    @FXML
     private GridPane GP;
 
     private int check_button = 1;
     private final ArrayList<TextField> textFields = new ArrayList<>();
+    private final ArrayList<String> rightValues = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,6 +76,7 @@ public class DigiController implements Initializable {
 
         submit.setOnMouseEntered(e -> submit.setStyle("-fx-background-color: #2d7945;"));
         submit.setOnMouseExited(e -> submit.setStyle("-fx-background-color: #2b342b;"));
+        submit.setOnAction(e -> makingTree());
 
         plus.setOnMouseEntered(e -> plus.setStyle("-fx-background-color: #2d7945;"));
         plus.setOnMouseExited(e -> plus.setStyle("-fx-background-color: #2b342b;"));
@@ -113,6 +124,80 @@ public class DigiController implements Initializable {
             }
             check_button = 2;
         });
+    }
+
+    public void makingTree() {
+
+        for (TextField textField : textFields){
+            if (!textField.getText().equals("")){
+                rightValues.add(textField.getText());
+            }
+        }
+        if (rightValues.size() > 0)
+            show_on_GUI();
+    }
+
+    private void show_on_GUI() {
+
+        float countByTwo = -1;
+        for (int i = rightValues.size(); i >= 1; i /= 2 )
+            countByTwo++;
+
+        float layoutY = 10;
+        float layoutX = countByTwo * 200;
+        float temp = layoutX;
+        double s = 1;
+        for (int i = 0, j = 1; i < rightValues.size(); i++){
+
+
+
+            Label text = new Label(rightValues.get(i));
+            text.setStyle("-fx-text-fill: white");
+
+            Circle circle = new Circle(30, 30, 30);
+            circle.setStyle("-fx-background-color: blue");
+
+            if (i == Math.pow(2, j) - 1){
+                j++;
+                layoutY += 100;
+                s = layoutX - (layoutX / 2);
+                layoutX /= 2;
+                countByTwo--;
+                temp = layoutX;
+            }
+
+
+            Line rightLine = new Line();
+            Line leftLine = new Line();
+            if (countByTwo > 0) {
+                leftLine.setStartX(0);
+                leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
+                leftLine.setStartY(-55);
+                leftLine.setEndY(0);
+                leftLine.setLayoutY(layoutY + 110);
+                leftLine.setLayoutX(temp + 15);
+                leftLine.setStrokeWidth(2);
+
+                rightLine.setStrokeWidth(2);
+
+                leftLine.setStroke(Color.WHITE);
+                rightLine.setStroke(Color.WHITE);
+                rightLine.setEndX(30);
+                rightLine.setStartX((layoutX - layoutX / 2));
+                rightLine.setStartY(70);
+                rightLine.setLayoutX(temp + 15);
+                rightLine.setLayoutY(layoutY + 55);
+                rightLine.setEndY(0);
+            }
+
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().addAll(circle, text);
+            stackPane.setLayoutX(temp);
+            stackPane.setLayoutY(layoutY);
+
+            temp += s * 2;
+            treeANP.getChildren().addAll(stackPane, leftLine, rightLine);
+        }
     }
 
     public void removeNode() {
