@@ -12,11 +12,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -66,7 +65,7 @@ public class DigiController implements Initializable {
 
     private int check_button = 1;
     private final ArrayList<TextField> textFields = new ArrayList<>();
-    private final ArrayList<String> rightValues = new ArrayList<>();
+    private final ArrayList<Double> rightValues = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -127,14 +126,79 @@ public class DigiController implements Initializable {
     }
 
     public void makingTree() {
-
+        rightValues.clear();
+        int counter_of_null = 0;
         for (TextField textField : textFields){
             if (!textField.getText().equals("")){
-                rightValues.add(textField.getText());
+                String[] string = textField.getText().split(" ");
+                double sum = 0;
+                if (string.length == 3) {
+                    for (int i = 0; i < 3; i++) {
+                        sum += Math.pow(Double.parseDouble(string[i]), 2);
+                    }
+                }
+                else {
+                    sum = -1;
+                }
+                rightValues.add(sum);
             }
+            else
+                rightValues.add(-1.0);
         }
-        if (rightValues.size() > 0)
-            show_on_GUI();
+        if (rightValues.size() > 0) {
+            makingBST_tree();
+//            show_on_GUI();
+        }
+    }
+
+    private void makingBST_tree() {
+        int first_min = -1;
+        int second_min = -1;
+        int temp = -1;
+        for (int i = 0; i < rightValues.size(); i++){
+            if (rightValues.get(i) != -1) {
+                if (first_min == -1 || rightValues.get(first_min) > rightValues.get(i)) {
+                    temp = first_min;
+                    first_min = i;
+                    if (second_min == -1) {
+                        if (temp != -1)
+                            second_min = temp;
+                    }
+                    if (temp != -1 && second_min != -1) {
+                        if (rightValues.get(temp) < rightValues.get(second_min)) {
+                            second_min = temp;
+                        }
+                    }
+                } else if (second_min == -1 || rightValues.get(second_min) > rightValues.get(i))
+                    second_min = i;
+            }
+
+        }
+//        int[] counter_of_null = new int[2];
+//
+//        int check = 0;
+//        if (first_min > second_min && second_min != -1)
+//            check = 1;
+//        for (int i = 0; i < rightValues.size(); i++){
+//            if (rightValues.get(i) == -1)
+//                counter_of_null[check]++;
+//            if (rightValues.get(i) == rightValues.get(first_min)) {
+//                if (first_min > second_min && second_min != -1)
+//                    break;
+//                else
+//                    check++;
+//            }
+//            if (rightValues.get(i) == rightValues.get(second_min)){
+//                if (second_min < first_min && second_min != -1)
+//                    check--;
+//                else
+//                    break;
+//            }
+//        }
+
+        System.out.println(textFields.get(first_min).getText());
+        System.out.println(textFields.get(second_min).getText());
+
     }
 
     private void show_on_GUI() {
@@ -151,7 +215,7 @@ public class DigiController implements Initializable {
 
 
 
-            Label text = new Label(rightValues.get(i));
+            Label text = new Label(Double.toString(rightValues.get(i)));
             text.setStyle("-fx-text-fill: white");
 
             Circle circle = new Circle(30, 30, 30);
