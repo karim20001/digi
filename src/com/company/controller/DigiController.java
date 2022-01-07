@@ -148,11 +148,12 @@ public class DigiController implements Initializable {
         }
         if (rightValues.size() > 0) {
             makingBST_tree();
-//            show_on_GUI();
+            show_on_GUI();
         }
     }
 
     Tree obj = new Tree();
+    ArrayList<String> all_for_gui = new ArrayList<>();
     private void makingBST_tree() {
         int first_min = -1;
         int second_min = -1;
@@ -204,6 +205,7 @@ public class DigiController implements Initializable {
         if (textFields.size() > 2){
             // set root
             obj.insert(textFields.get(rooter).getText());
+            all_for_gui.add(textFields.get(rooter).getText());
 
             //set near to (0, 0, 0)
             obj.root.left = new Tree.Node(textFields.get(first_min).getText());
@@ -217,23 +219,30 @@ public class DigiController implements Initializable {
             temp_array.add(go_to);
             split_textFields.remove(go_to);
             split_textFields.remove(go_rooter);
+            all_for_gui.add(go_to1[0] + " " + go_to1[1] + " " + go_to1[2]);
+            all_for_gui.add(go_to[0] + " " + go_to[1] + " " + go_to[2]);
             //--------------------------------------------------------
             // making tree
             ArrayList<Tree.Node> saving_root = new ArrayList<>();
+            saving_root.add(obj.root.left);
+            saving_root.add(obj.root.right);
+            ArrayList<Tree.Node> temp_roots = new ArrayList<>();
+            ArrayList<String[]> temp_parents = new ArrayList<>();
 
-            while (true){
+            do {
 
                 double min1 = -1, min2 = -1, cast = -1;
 
                 String[] temp1 = null, save_min1 = null, save_min2 = null;
-                for (String[] parents : temp_array){
-                    int going_forward = 0;
-                    for (String[] childs : split_textFields){
+                int going_forward = 0;
+                for (String[] parents : temp_array) {
+
+                    for (String[] childs : split_textFields) {
                         double distance = Math.sqrt(Math.pow(Double.parseDouble(childs[0]) - Double.parseDouble(parents[0]), 2) + Math.pow(Double.parseDouble(childs[1]) - Double.parseDouble(parents[1]), 2) + Math.pow(Double.parseDouble(childs[2]) - Double.parseDouble(parents[2]), 2));
-                        System.out.println(distance);
+
                         if (min1 == -1 || min1 > distance) {
 
-                            if (min1 != -1){
+                            if (min1 != -1) {
                                 temp1 = save_min1;
                                 cast = min1;
                             }
@@ -252,14 +261,13 @@ public class DigiController implements Initializable {
                                     min2 = cast;
                                 }
                             }
-                        }
-                        else if (min2 == -1 || min2 > distance) {
+                        } else if (min2 == -1 || min2 > distance) {
                             min2 = distance;
                             save_min2 = childs;
                         }
                     }
 
-                    for (int i = going_forward; i < temp_array.size(); i++){
+                    for (int i = 0; i < temp_array.size(); i++) {
                         if (save_min1 == null)
                             break;
                         double distance_from_other_parent1 = Math.sqrt(Math.pow(Double.parseDouble(save_min1[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min1[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min1[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
@@ -268,41 +276,59 @@ public class DigiController implements Initializable {
                             distance_from_other_parent2 = Math.sqrt(Math.pow(Double.parseDouble(save_min2[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min2[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min2[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
                         if (distance_from_other_parent1 < min1)
                             min1 = -1;
-                        if (distance_from_other_parent2 < min2)
+                        if (distance_from_other_parent2 < min2 && min2 != -1)
                             min2 = -1;
                     }
-                    System.out.println(Arrays.toString(save_min1));
-                    System.out.println(Arrays.toString(save_min2));
-                    return;
+
+                    if (min1 != -1) {
+                        temp_parents.add(save_min1);
+                        saving_root.get(going_forward).left = new Tree.Node(save_min1[0] + " " + save_min1[1] + " " + save_min1[2]);
+                        temp_roots.add(saving_root.get(going_forward).left);
+                        split_textFields.remove(save_min1);
+                        all_for_gui.add(save_min1[0] + " " + save_min1[1] + " " + save_min1[2]);
+                    } else {
+                        saving_root.get(going_forward).left = new Tree.Node("");
+                        all_for_gui.add(null);
+                    }
+                    if (min2 != -1) {
+                        temp_parents.add(save_min2);
+                        saving_root.get(going_forward).right = new Tree.Node(save_min2[0] + " " + save_min2[1] + " " + save_min2[2]);
+                        temp_roots.add(saving_root.get(going_forward).right);
+                        split_textFields.remove(save_min2);
+                        all_for_gui.add(save_min2[0] + " " + save_min2[1] + " " + save_min2[2]);
+                    } else {
+                        saving_root.get(going_forward).right = new Tree.Node("");
+                        all_for_gui.add(null);
+                    }
+                    save_min1 = null;
+                    save_min2 = null;
+                    min1 = -1;
+                    min2 = -1;
+                    going_forward++;
                 }
+                temp_array.clear();
+                temp_array.addAll(temp_parents);
+                saving_root.clear();
+                saving_root.addAll(temp_roots);
 
-            }
-
-
+            } while (split_textFields.size() != 0);
+            System.out.println(obj.root.left.left.key);
         }
     }
 
     private void show_on_GUI() {
 
         float countByTwo = -1;
-        for (int i = rightValues.size(); i >= 1; i /= 2 )
+        for (int i = all_for_gui.size(); i >= 1; i /= 2 )
             countByTwo++;
 
         float layoutY = 10;
         float layoutX = countByTwo * 200;
         float temp = layoutX;
         double s = 1;
-        for (int i = 0, j = 1; i < rightValues.size(); i++){
+        for (int i = 0, j = 1; i < all_for_gui.size(); i++) {
 
-
-
-            Label text = new Label(Double.toString(rightValues.get(i)));
-            text.setStyle("-fx-text-fill: white");
-
-            Circle circle = new Circle(30, 30, 30);
-            circle.setStyle("-fx-background-color: blue");
-
-            if (i == Math.pow(2, j) - 1){
+            if (i == Math.pow(2, j) - 1) {
                 j++;
                 layoutY += 100;
                 s = layoutX - (layoutX / 2);
@@ -312,36 +338,46 @@ public class DigiController implements Initializable {
             }
 
 
+            Label text = new Label(all_for_gui.get(i));
+            text.setStyle("-fx-text-fill: white");
+
+            Circle circle = new Circle(30, 30, 30);
+            circle.setStyle("-fx-background-color: blue");
+
+
             Line rightLine = new Line();
             Line leftLine = new Line();
-            if (countByTwo > 0) {
-                leftLine.setStartX(0);
-                leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
-                leftLine.setStartY(-55);
-                leftLine.setEndY(0);
-                leftLine.setLayoutY(layoutY + 110);
-                leftLine.setLayoutX(temp + 15);
-                leftLine.setStrokeWidth(2);
+            if (all_for_gui.get(i) != null) {
+                if (countByTwo > 0) {
+                    leftLine.setStartX(0);
+                    leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
+                    leftLine.setStartY(-55);
+                    leftLine.setEndY(0);
+                    leftLine.setLayoutY(layoutY + 110);
+                    leftLine.setLayoutX(temp + 15);
+                    leftLine.setStrokeWidth(2);
 
-                rightLine.setStrokeWidth(2);
+                    rightLine.setStrokeWidth(2);
 
-                leftLine.setStroke(Color.WHITE);
-                rightLine.setStroke(Color.WHITE);
-                rightLine.setEndX(30);
-                rightLine.setStartX((layoutX - layoutX / 2));
-                rightLine.setStartY(70);
-                rightLine.setLayoutX(temp + 15);
-                rightLine.setLayoutY(layoutY + 55);
-                rightLine.setEndY(0);
+                    leftLine.setStroke(Color.WHITE);
+                    rightLine.setStroke(Color.WHITE);
+                    rightLine.setEndX(30);
+                    rightLine.setStartX((layoutX - layoutX / 2));
+                    rightLine.setStartY(70);
+                    rightLine.setLayoutX(temp + 15);
+                    rightLine.setLayoutY(layoutY + 55);
+                    rightLine.setEndY(0);
+                }
+
+                StackPane stackPane = new StackPane();
+                stackPane.getChildren().addAll(circle, text);
+                stackPane.setLayoutX(temp);
+                stackPane.setLayoutY(layoutY);
+
+
+                treeANP.getChildren().addAll(stackPane, leftLine, rightLine);
             }
-
-            StackPane stackPane = new StackPane();
-            stackPane.getChildren().addAll(circle, text);
-            stackPane.setLayoutX(temp);
-            stackPane.setLayoutY(layoutY);
-
             temp += s * 2;
-            treeANP.getChildren().addAll(stackPane, leftLine, rightLine);
         }
     }
 
