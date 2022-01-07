@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.model.Tree;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,7 +16,7 @@ import javafx.scene.shape.Line;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -151,12 +152,16 @@ public class DigiController implements Initializable {
         }
     }
 
+    Tree obj = new Tree();
     private void makingBST_tree() {
         int first_min = -1;
         int second_min = -1;
         int temp = -1;
+        // find two close to (0, 0, 0)
         for (int i = 0; i < rightValues.size(); i++){
+
             if (rightValues.get(i) != -1) {
+
                 if (first_min == -1 || rightValues.get(first_min) > rightValues.get(i)) {
                     temp = first_min;
                     first_min = i;
@@ -169,36 +174,112 @@ public class DigiController implements Initializable {
                             second_min = temp;
                         }
                     }
-                } else if (second_min == -1 || rightValues.get(second_min) > rightValues.get(i))
+                }
+                else if (second_min == -1 || rightValues.get(second_min) > rightValues.get(i))
                     second_min = i;
             }
+        }
+
+//        System.out.println(textFields.get(first_min).getText());
+//        System.out.println(textFields.get(second_min).getText());
+//        obj.insert(textFields.get(0).getText());
+//        obj.insert(textFields.get(1).getText());
+//        obj.insert(textFields.get(2).getText());
+//        obj.insert(textFields.get(first_min).getText());
+//        obj.insert(textFields.get(second_min).getText());
+//        System.out.println(obj.root.right.key);
+        //-------------------------------------------------------------------------------------
+
+        ArrayList<String[]> split_textFields = new ArrayList<>();
+        int rooter = 0;
+        for (int i = 0; i < textFields.size(); i++){
+            if (i != first_min && i != second_min)
+                rooter = i;
+            if (textFields.get(i).getText().length() > 0)
+                split_textFields.add(textFields.get(i).getText().split(" "));
+        }
+
+        ArrayList<String[]> temp_array = new ArrayList<>();
+
+        if (textFields.size() > 2){
+            // set root
+            obj.insert(textFields.get(rooter).getText());
+
+            //set near to (0, 0, 0)
+            obj.root.left = new Tree.Node(textFields.get(first_min).getText());
+            obj.root.right = new Tree.Node(textFields.get(second_min).getText());
+            String[] go_to1 = split_textFields.get(first_min);
+            temp_array.add(go_to1);
+            String[] go_to = split_textFields.get(second_min);
+            String[] go_rooter = split_textFields.get(rooter);
+            split_textFields.remove(go_to1);
+//            System.out.println(split_textFields.size());
+            temp_array.add(go_to);
+            split_textFields.remove(go_to);
+            split_textFields.remove(go_rooter);
+            //--------------------------------------------------------
+            // making tree
+            ArrayList<Tree.Node> saving_root = new ArrayList<>();
+
+            while (true){
+
+                double min1 = -1, min2 = -1, cast = -1;
+
+                String[] temp1 = null, save_min1 = null, save_min2 = null;
+                for (String[] parents : temp_array){
+                    int going_forward = 0;
+                    for (String[] childs : split_textFields){
+                        double distance = Math.sqrt(Math.pow(Double.parseDouble(childs[0]) - Double.parseDouble(parents[0]), 2) + Math.pow(Double.parseDouble(childs[1]) - Double.parseDouble(parents[1]), 2) + Math.pow(Double.parseDouble(childs[2]) - Double.parseDouble(parents[2]), 2));
+                        System.out.println(distance);
+                        if (min1 == -1 || min1 > distance) {
+
+                            if (min1 != -1){
+                                temp1 = save_min1;
+                                cast = min1;
+                            }
+                            save_min1 = childs;
+                            min1 = distance;
+
+                            if (min2 == -1) {
+                                if (temp1 != null) {
+                                    save_min2 = temp1;
+                                    min2 = cast;
+                                }
+                            }
+                            if (temp1 != null && min2 != -1) {
+                                if (cast < min2) {
+                                    save_min2 = temp1;
+                                    min2 = cast;
+                                }
+                            }
+                        }
+                        else if (min2 == -1 || min2 > distance) {
+                            min2 = distance;
+                            save_min2 = childs;
+                        }
+                    }
+
+                    for (int i = going_forward; i < temp_array.size(); i++){
+                        if (save_min1 == null)
+                            break;
+                        double distance_from_other_parent1 = Math.sqrt(Math.pow(Double.parseDouble(save_min1[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min1[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min1[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
+                        double distance_from_other_parent2 = -1;
+                        if (save_min2 != null)
+                            distance_from_other_parent2 = Math.sqrt(Math.pow(Double.parseDouble(save_min2[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min2[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min2[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
+                        if (distance_from_other_parent1 < min1)
+                            min1 = -1;
+                        if (distance_from_other_parent2 < min2)
+                            min2 = -1;
+                    }
+                    System.out.println(Arrays.toString(save_min1));
+                    System.out.println(Arrays.toString(save_min2));
+                    return;
+                }
+
+            }
+
 
         }
-//        int[] counter_of_null = new int[2];
-//
-//        int check = 0;
-//        if (first_min > second_min && second_min != -1)
-//            check = 1;
-//        for (int i = 0; i < rightValues.size(); i++){
-//            if (rightValues.get(i) == -1)
-//                counter_of_null[check]++;
-//            if (rightValues.get(i) == rightValues.get(first_min)) {
-//                if (first_min > second_min && second_min != -1)
-//                    break;
-//                else
-//                    check++;
-//            }
-//            if (rightValues.get(i) == rightValues.get(second_min)){
-//                if (second_min < first_min && second_min != -1)
-//                    check--;
-//                else
-//                    break;
-//            }
-//        }
-
-        System.out.println(textFields.get(first_min).getText());
-        System.out.println(textFields.get(second_min).getText());
-
     }
 
     private void show_on_GUI() {
