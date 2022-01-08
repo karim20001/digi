@@ -42,6 +42,7 @@ public class Tree {
             for (StackPane x : DigiController.stackPanes){
                 Circle circle = (Circle) x.getChildren().get(0);
                 circle.setFill(Color.BLACK);
+                circle.setStroke(Color.BLACK);
             }
 
         String[] repair_shop = root.key.split(" ");
