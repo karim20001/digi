@@ -86,7 +86,7 @@ public class Tree {
     }
 
     // method for inorder traversal of BST
-    void inorder() {
+    public void inorder() {
         inorder_Recursive(root);
     }
 

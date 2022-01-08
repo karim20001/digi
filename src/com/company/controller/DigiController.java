@@ -67,6 +67,7 @@ public class DigiController implements Initializable {
     private int check_button = 1;
     private final ArrayList<TextField> textFields = new ArrayList<>();
     private final ArrayList<Double> rightValues = new ArrayList<>();
+    Tree obj = new Tree();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -127,6 +128,7 @@ public class DigiController implements Initializable {
     }
 
     public void makingTree() {
+        obj = new Tree();
         rightValues.clear();
         int counter_of_null = 0;
         for (TextField textField : textFields){
@@ -152,7 +154,6 @@ public class DigiController implements Initializable {
         }
     }
 
-    Tree obj = new Tree();
     ArrayList<String> all_for_gui = new ArrayList<>();
     private void makingBST_tree() {
         int first_min = -1;
@@ -181,14 +182,6 @@ public class DigiController implements Initializable {
             }
         }
 
-//        System.out.println(textFields.get(first_min).getText());
-//        System.out.println(textFields.get(second_min).getText());
-//        obj.insert(textFields.get(0).getText());
-//        obj.insert(textFields.get(1).getText());
-//        obj.insert(textFields.get(2).getText());
-//        obj.insert(textFields.get(first_min).getText());
-//        obj.insert(textFields.get(second_min).getText());
-//        System.out.println(obj.root.right.key);
         //-------------------------------------------------------------------------------------
 
         ArrayList<String[]> split_textFields = new ArrayList<>();
@@ -332,8 +325,8 @@ public class DigiController implements Initializable {
         head.add(obj.root);
         leaf.add(obj.root.left);
         leaf.add(obj.root.right);
-        System.out.println(obj.root.right.right.right.key);
-
+//        System.out.println(obj.root.left.left.right);
+obj.inorder();
         float countByTwo = -1;
         for (int i = all_for_gui.size(); i >= 1; i /= 2 )
             countByTwo++;
@@ -380,9 +373,10 @@ public class DigiController implements Initializable {
 
             Line rightLine = new Line();
             Line leftLine = new Line();
-            if (head.get(k) != null) {
+            if (head.get(k) != null && head.get(k).key != null) {
+//                System.out.println(head.get(k).key);
                 text.setText(head.get(k).key);
-                if (countByTwo > 0) {
+//                if (countByTwo > 0) {
                     if (leaf.get(counter) != null) {
                         leftLine.setStartX(0);
                         leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
@@ -403,7 +397,7 @@ public class DigiController implements Initializable {
                         rightLine.setLayoutY(layoutY + 55);
                         rightLine.setEndY(0);
                     }
-                }
+//                }
 
                 StackPane stackPane = new StackPane();
                 stackPane.getChildren().addAll(circle, text);
@@ -421,6 +415,7 @@ public class DigiController implements Initializable {
                             temp_for_gui.add(x.left);
                         else
                             temp_for_gui.add(null);
+//                        System.out.println(x.left.key);
                     }
                     else
                         temp_for_gui.add(null);
@@ -433,6 +428,10 @@ public class DigiController implements Initializable {
                     }
                     else
                         temp_for_gui.add(null);
+                }
+                else {
+                    temp_for_gui.add(null);
+                    temp_for_gui.add(null);
                 }
             }
             temp += s * 2;
