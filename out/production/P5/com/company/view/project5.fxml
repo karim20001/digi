@@ -122,7 +122,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="search" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: white;">
+                  <TextField fx:id="search" prefHeight="24.0" prefWidth="70.0" style="-fx-background-color: white;">
                      <HBox.margin>
                         <Insets top="10.0" />
                      </HBox.margin>
