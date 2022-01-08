@@ -38,6 +38,9 @@ public class DigiController implements Initializable {
     private Button result;
 
     @FXML
+    private Button deleteNode;
+
+    @FXML
     private Button calculate;
 
     @FXML
@@ -95,6 +98,10 @@ public class DigiController implements Initializable {
         remove.setOnMouseEntered(e -> remove.setStyle("-fx-background-color: #2d7945;"));
         remove.setOnMouseExited(e -> remove.setStyle("-fx-background-color: #2b342b;"));
         remove.setOnAction(e -> removeNode());
+
+        deleteNode.setOnMouseEntered(e -> deleteNode.setStyle("-fx-background-color: #2d7945;"));
+        deleteNode.setOnMouseExited(e -> deleteNode.setStyle("-fx-background-color: #2b342b;"));
+        deleteNode.setOnAction(e -> obj.remove());
 
         in1.textProperty().addListener(e -> create_input());
 
@@ -232,7 +239,6 @@ public class DigiController implements Initializable {
             ArrayList<String[]> temp_parents = new ArrayList<>();
 
             do {
-
                 double min1 = -1, min2 = -1, cast = -1;
 
                 String[] temp1 = null, save_min1 = null, save_min2 = null;
@@ -335,7 +341,7 @@ public class DigiController implements Initializable {
         leaf.add(obj.root.left);
         leaf.add(obj.root.right);
 //        System.out.println(obj.root.left.left.right);
-obj.inorder();
+
         float countByTwo = -1;
         for (int i = all_for_gui.size(); i >= 1; i /= 2 )
             countByTwo++;
