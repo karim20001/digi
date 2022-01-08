@@ -38,6 +38,9 @@ public class DigiController implements Initializable {
     private Button result;
 
     @FXML
+    private Button calculate;
+
+    @FXML
     private TextField in1;
 
     @FXML
@@ -67,6 +70,7 @@ public class DigiController implements Initializable {
     private int check_button = 1;
     private final ArrayList<TextField> textFields = new ArrayList<>();
     private final ArrayList<Double> rightValues = new ArrayList<>();
+    public static final ArrayList<StackPane> stackPanes = new ArrayList<>();
     Tree obj = new Tree();
 
     @Override
@@ -75,9 +79,14 @@ public class DigiController implements Initializable {
         searchBT.setOnMouseEntered(e -> searchBT.setStyle("-fx-background-color: #2d7945;"));
         searchBT.setOnMouseExited(e -> searchBT.setStyle("-fx-background-color: #2b342b;"));
 
+        calculate.setOnMouseEntered(e -> calculate.setStyle("-fx-background-color: #2d7945;"));
+        calculate.setOnMouseExited(e -> calculate.setStyle("-fx-background-color: #2b342b;"));
+        calculate.setOnAction(e -> obj.search(in2.getText().split(" ")));
+
         submit.setOnMouseEntered(e -> submit.setStyle("-fx-background-color: #2d7945;"));
         submit.setOnMouseExited(e -> submit.setStyle("-fx-background-color: #2b342b;"));
         submit.setOnAction(e -> makingTree());
+
 
         plus.setOnMouseEntered(e -> plus.setStyle("-fx-background-color: #2d7945;"));
         plus.setOnMouseExited(e -> plus.setStyle("-fx-background-color: #2b342b;"));
@@ -400,10 +409,12 @@ obj.inorder();
 //                }
 
                 StackPane stackPane = new StackPane();
+//                    circle.setFill(Color.BLUEVIOLET);
                 stackPane.getChildren().addAll(circle, text);
                 stackPane.setLayoutX(temp);
                 stackPane.setLayoutY(layoutY);
-
+//                stackPane.setStyle("-fx-background-color: blue");
+                stackPanes.add(stackPane);
 
                 treeANP.getChildren().addAll(stackPane, leftLine, rightLine);
             }
