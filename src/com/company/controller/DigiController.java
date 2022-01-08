@@ -287,7 +287,7 @@ public class DigiController implements Initializable {
                         split_textFields.remove(save_min1);
                         all_for_gui.add(save_min1[0] + " " + save_min1[1] + " " + save_min1[2]);
                     } else {
-                        saving_root.get(going_forward).left = new Tree.Node("");
+                        saving_root.get(going_forward).left = new Tree.Node(null);
                         all_for_gui.add(null);
                     }
                     if (min2 != -1) {
@@ -297,26 +297,42 @@ public class DigiController implements Initializable {
                         split_textFields.remove(save_min2);
                         all_for_gui.add(save_min2[0] + " " + save_min2[1] + " " + save_min2[2]);
                     } else {
-                        saving_root.get(going_forward).right = new Tree.Node("");
+                        saving_root.get(going_forward).right = new Tree.Node(null);
                         all_for_gui.add(null);
                     }
                     save_min1 = null;
                     save_min2 = null;
+                    temp1 = null;
                     min1 = -1;
                     min2 = -1;
+                    cast = -1;
                     going_forward++;
                 }
                 temp_array.clear();
                 temp_array.addAll(temp_parents);
+//                System.out.println(Arrays.toString(temp_parents));
                 saving_root.clear();
                 saving_root.addAll(temp_roots);
+                temp_roots.clear();
+                temp_parents.clear();
 
             } while (split_textFields.size() != 0);
-            System.out.println(obj.root.left.left.key);
+//            System.out.println(obj.root.left.left.key);
         }
     }
 
     private void show_on_GUI() {
+
+        treeANP.getChildren().clear();
+
+        ArrayList<Tree.Node> temp_for_gui = new ArrayList<>();
+        ArrayList<Tree.Node> head = new ArrayList<>();
+        ArrayList<Tree.Node> leaf = new ArrayList<>();
+
+        head.add(obj.root);
+        leaf.add(obj.root.left);
+        leaf.add(obj.root.right);
+        System.out.println(obj.root.right.right.right.key);
 
         float countByTwo = -1;
         for (int i = all_for_gui.size(); i >= 1; i /= 2 )
@@ -326,8 +342,9 @@ public class DigiController implements Initializable {
         float layoutX = countByTwo * 200;
         float temp = layoutX;
         double s = 1;
-        for (int i = 0, j = 1; i < all_for_gui.size(); i++) {
+        for (int i = 0, j = 1, k = 0, counter = 0; ; i++, k++, counter += 2) {
 
+            boolean checker = true;
             if (i == Math.pow(2, j) - 1) {
                 j++;
                 layoutY += 100;
@@ -335,10 +352,26 @@ public class DigiController implements Initializable {
                 layoutX /= 2;
                 countByTwo--;
                 temp = layoutX;
+
+                head.clear();
+                head.addAll(leaf);
+                leaf.clear();
+                leaf.addAll(temp_for_gui);
+                temp_for_gui.clear();
+                k = 0;
+                counter = 0;
             }
+            for (Tree.Node x : head){
+                if (x != null){
+                    if (x.key != null)
+                        checker = false;
+                }
+            }
+            if (checker)
+                break;
 
 
-            Label text = new Label(all_for_gui.get(i));
+            Label text = new Label();
             text.setStyle("-fx-text-fill: white");
 
             Circle circle = new Circle(30, 30, 30);
@@ -347,26 +380,29 @@ public class DigiController implements Initializable {
 
             Line rightLine = new Line();
             Line leftLine = new Line();
-            if (all_for_gui.get(i) != null) {
+            if (head.get(k) != null) {
+                text.setText(head.get(k).key);
                 if (countByTwo > 0) {
-                    leftLine.setStartX(0);
-                    leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
-                    leftLine.setStartY(-55);
-                    leftLine.setEndY(0);
-                    leftLine.setLayoutY(layoutY + 110);
-                    leftLine.setLayoutX(temp + 15);
-                    leftLine.setStrokeWidth(2);
-
-                    rightLine.setStrokeWidth(2);
-
-                    leftLine.setStroke(Color.WHITE);
-                    rightLine.setStroke(Color.WHITE);
-                    rightLine.setEndX(30);
-                    rightLine.setStartX((layoutX - layoutX / 2));
-                    rightLine.setStartY(70);
-                    rightLine.setLayoutX(temp + 15);
-                    rightLine.setLayoutY(layoutY + 55);
-                    rightLine.setEndY(0);
+                    if (leaf.get(counter) != null) {
+                        leftLine.setStartX(0);
+                        leftLine.setEndX((layoutX - layoutX / 2) * -1 + 40);
+                        leftLine.setStartY(-55);
+                        leftLine.setEndY(0);
+                        leftLine.setLayoutY(layoutY + 110);
+                        leftLine.setLayoutX(temp + 15);
+                        leftLine.setStrokeWidth(2);
+                        leftLine.setStroke(Color.WHITE);
+                    }
+                    if (leaf.get(counter + 1) != null) {
+                        rightLine.setStrokeWidth(2);
+                        rightLine.setStroke(Color.WHITE);
+                        rightLine.setEndX(30);
+                        rightLine.setStartX((layoutX - layoutX / 2));
+                        rightLine.setStartY(70);
+                        rightLine.setLayoutX(temp + 15);
+                        rightLine.setLayoutY(layoutY + 55);
+                        rightLine.setEndY(0);
+                    }
                 }
 
                 StackPane stackPane = new StackPane();
@@ -376,6 +412,28 @@ public class DigiController implements Initializable {
 
 
                 treeANP.getChildren().addAll(stackPane, leftLine, rightLine);
+            }
+
+            for (Tree.Node x : leaf){
+                if (x != null) {
+                    if (x.left != null) {
+                        if (x.left.key != null)
+                            temp_for_gui.add(x.left);
+                        else
+                            temp_for_gui.add(null);
+                    }
+                    else
+                        temp_for_gui.add(null);
+
+                    if (x.right != null) {
+                        if (x.right.key != null)
+                            temp_for_gui.add(x.right);
+                        else
+                            temp_for_gui.add(null);
+                    }
+                    else
+                        temp_for_gui.add(null);
+                }
             }
             temp += s * 2;
         }
