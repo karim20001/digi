@@ -3,6 +3,7 @@ package com.company.model;
 import com.company.controller.DigiController;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -159,8 +160,8 @@ public class Tree {
         }
     }
 
-    public void remove (){
-
+    public void remove (String val){
+        DigiController.textFields.removeIf(x -> x.getText().equals(val));
     }
 
     //recursive delete function

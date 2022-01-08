@@ -101,7 +101,7 @@
                   </Button>
                </children>
             </HBox>
-            <Button fx:id="calculate" alignment="CENTER" layoutX="154.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" style="-fx-background-color: #2b342b;" text="Search near shop" textFill="#ff8412" />
+            <Button fx:id="calculate" alignment="CENTER" layoutX="154.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="178.0" style="-fx-background-color: #2b342b;" text="Search near shop" textFill="#ff8412" AnchorPane.leftAnchor="154.0" AnchorPane.rightAnchor="137.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="AP2" layoutX="1.0" layoutY="41.0" prefHeight="387.0" prefWidth="469.0" style="-fx-background-color: #2b342b;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0">
@@ -110,12 +110,12 @@
                <content>
                   <AnchorPane fx:id="treeANP" prefHeight="322.0" prefWidth="457.0">
                      <children>
-                        <Line endX="158.5" layoutX="101.0" startX="-100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Line endX="313.5" layoutX="101.0" startX="-100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
             </ScrollPane>
-            <HBox prefHeight="49.0" prefWidth="250.0">
+            <HBox prefHeight="41.0" prefWidth="421.0">
                <children>
                   <Label alignment="CENTER" prefHeight="49.0" prefWidth="83.0" text="Search:" textFill="WHITE">
                      <font>
@@ -141,6 +141,11 @@
                         <Insets bottom="3.0" left="3.0" top="3.0" />
                      </HBox.margin>
                   </Button>
+                  <Button fx:id="deleteNode" alignment="CENTER" mnemonicParsing="false" prefHeight="49.0" prefWidth="71.0" style="-fx-background-color: #2b342b;" text="delete" textFill="#d31010" visible="false">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <Label fx:id="error" alignment="CENTER" prefHeight="39.0" prefWidth="94.0" style="-fx-background-color: #2b342b;" text="Not found" textFill="#ff1c1c" visible="false" />
                </children>
             </HBox>
          </children>

@@ -59,6 +59,9 @@ public class DigiController implements Initializable {
     private ScrollPane SP;
 
     @FXML
+    private Label error;
+
+    @FXML
     private AnchorPane ANP;
 
     @FXML
@@ -71,7 +74,7 @@ public class DigiController implements Initializable {
     private GridPane GP;
 
     private int check_button = 1;
-    private final ArrayList<TextField> textFields = new ArrayList<>();
+    public static final ArrayList<TextField> textFields = new ArrayList<>();
     private final ArrayList<Double> rightValues = new ArrayList<>();
     public static final ArrayList<StackPane> stackPanes = new ArrayList<>();
     Tree obj = new Tree();
@@ -81,6 +84,22 @@ public class DigiController implements Initializable {
 
         searchBT.setOnMouseEntered(e -> searchBT.setStyle("-fx-background-color: #2d7945;"));
         searchBT.setOnMouseExited(e -> searchBT.setStyle("-fx-background-color: #2b342b;"));
+        searchBT.setOnAction(e -> {
+            String user_to_search = search.getText();
+            for (TextField x : textFields){
+                if (x.getText().equals(user_to_search)){
+                    deleteNode.setVisible(true);
+                    return;
+                }
+            }
+            error.setVisible(true);
+        });
+
+        search.textProperty().addListener(e -> {
+            deleteNode.setVisible(false);
+            error.setVisible(false);
+        });
+
 
         calculate.setOnMouseEntered(e -> calculate.setStyle("-fx-background-color: #2d7945;"));
         calculate.setOnMouseExited(e -> calculate.setStyle("-fx-background-color: #2b342b;"));
@@ -101,7 +120,11 @@ public class DigiController implements Initializable {
 
         deleteNode.setOnMouseEntered(e -> deleteNode.setStyle("-fx-background-color: #2d7945;"));
         deleteNode.setOnMouseExited(e -> deleteNode.setStyle("-fx-background-color: #2b342b;"));
-        deleteNode.setOnAction(e -> obj.remove());
+        deleteNode.setOnAction(e -> {
+            obj.remove(search.getText());
+            deleteNode.setVisible(false);
+            makingTree();
+        });
 
         in1.textProperty().addListener(e -> create_input());
 
@@ -144,7 +167,9 @@ public class DigiController implements Initializable {
     }
 
     public void makingTree() {
+
         obj = new Tree();
+        treeANP.getChildren().clear();
         rightValues.clear();
         int counter_of_null = 0;
         for (TextField textField : textFields){
@@ -327,11 +352,17 @@ public class DigiController implements Initializable {
             } while (split_textFields.size() != 0);
 //            System.out.println(obj.root.left.left.key);
         }
+        else {
+            obj.insert(textFields.get(0).getText());
+            all_for_gui.add(null);
+            if (textFields.size() == 2) {
+                obj.root.left = new Tree.Node(textFields.get(1).getText());
+                all_for_gui.add(null);
+            }
+        }
     }
 
     private void show_on_GUI() {
-
-        treeANP.getChildren().clear();
 
         ArrayList<Tree.Node> temp_for_gui = new ArrayList<>();
         ArrayList<Tree.Node> head = new ArrayList<>();
@@ -340,7 +371,6 @@ public class DigiController implements Initializable {
         head.add(obj.root);
         leaf.add(obj.root.left);
         leaf.add(obj.root.right);
-//        System.out.println(obj.root.left.left.right);
 
         float countByTwo = -1;
         for (int i = all_for_gui.size(); i >= 1; i /= 2 )
@@ -383,8 +413,6 @@ public class DigiController implements Initializable {
             text.setStyle("-fx-text-fill: white");
 
             Circle circle = new Circle(30, 30, 30);
-            circle.setStyle("-fx-background-color: blue");
-
 
             Line rightLine = new Line();
             Line leftLine = new Line();
@@ -499,5 +527,4 @@ public class DigiController implements Initializable {
             }
         }
     }
-
 }
