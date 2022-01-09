@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -16,7 +15,6 @@ import javafx.scene.shape.Line;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -54,9 +52,6 @@ public class DigiController implements Initializable {
 
     @FXML
     private Button searchBT;
-
-    @FXML
-    private ScrollPane SP;
 
     @FXML
     private Label error;
@@ -226,40 +221,27 @@ public class DigiController implements Initializable {
         //-------------------------------------------------------------------------------------
 
         ArrayList<String[]> split_textFields = new ArrayList<>();
-        int rooter = 0;
-        for (int i = 0; i < textFields.size(); i++){
-            if (i != first_min && i != second_min)
-                rooter = i;
-            if (textFields.get(i).getText().length() > 0)
-                split_textFields.add(textFields.get(i).getText().split(" "));
+        for (TextField textField : textFields) {
+
+            if (textField.getText().length() > 0)
+                split_textFields.add(textField.getText().split(" "));
         }
 
         ArrayList<String[]> temp_array = new ArrayList<>();
 
         if (textFields.size() > 2){
             // set root
-            obj.insert(textFields.get(rooter).getText());
-            all_for_gui.add(textFields.get(rooter).getText());
+            obj.insert(textFields.get(first_min).getText());
+            all_for_gui.add(textFields.get(first_min).getText());
 
             //set near to (0, 0, 0)
-            obj.root.left = new Tree.Node(textFields.get(first_min).getText());
-            obj.root.right = new Tree.Node(textFields.get(second_min).getText());
-            String[] go_to1 = split_textFields.get(first_min);
-            temp_array.add(go_to1);
-            String[] go_to = split_textFields.get(second_min);
-            String[] go_rooter = split_textFields.get(rooter);
-            split_textFields.remove(go_to1);
-//            System.out.println(split_textFields.size());
-            temp_array.add(go_to);
-            split_textFields.remove(go_to);
+            String[] go_rooter = split_textFields.get(first_min);
             split_textFields.remove(go_rooter);
-            all_for_gui.add(go_to1[0] + " " + go_to1[1] + " " + go_to1[2]);
-            all_for_gui.add(go_to[0] + " " + go_to[1] + " " + go_to[2]);
+            temp_array.add(go_rooter);
             //--------------------------------------------------------
             // making tree
             ArrayList<Tree.Node> saving_root = new ArrayList<>();
-            saving_root.add(obj.root.left);
-            saving_root.add(obj.root.right);
+            saving_root.add(obj.root);
             ArrayList<Tree.Node> temp_roots = new ArrayList<>();
             ArrayList<String[]> temp_parents = new ArrayList<>();
 
@@ -300,13 +282,13 @@ public class DigiController implements Initializable {
                         }
                     }
 
-                    for (int i = 0; i < temp_array.size(); i++) {
+                    for (String[] strings : temp_array) {
                         if (save_min1 == null)
                             break;
-                        double distance_from_other_parent1 = Math.sqrt(Math.pow(Double.parseDouble(save_min1[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min1[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min1[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
+                        double distance_from_other_parent1 = Math.sqrt(Math.pow(Double.parseDouble(save_min1[0]) - Double.parseDouble(strings[0]), 2) + Math.pow(Double.parseDouble(save_min1[1]) - Double.parseDouble(strings[1]), 2) + Math.pow(Double.parseDouble(save_min1[2]) - Double.parseDouble(strings[2]), 2));
                         double distance_from_other_parent2 = -1;
                         if (save_min2 != null)
-                            distance_from_other_parent2 = Math.sqrt(Math.pow(Double.parseDouble(save_min2[0]) - Double.parseDouble(temp_array.get(i)[0]), 2) + Math.pow(Double.parseDouble(save_min2[1]) - Double.parseDouble(temp_array.get(i)[1]), 2) + Math.pow(Double.parseDouble(save_min2[2]) - Double.parseDouble(temp_array.get(i)[2]), 2));
+                            distance_from_other_parent2 = Math.sqrt(Math.pow(Double.parseDouble(save_min2[0]) - Double.parseDouble(strings[0]), 2) + Math.pow(Double.parseDouble(save_min2[1]) - Double.parseDouble(strings[1]), 2) + Math.pow(Double.parseDouble(save_min2[2]) - Double.parseDouble(strings[2]), 2));
                         if (distance_from_other_parent1 < min1)
                             min1 = -1;
                         if (distance_from_other_parent2 < min2 && min2 != -1)
@@ -343,14 +325,12 @@ public class DigiController implements Initializable {
                 }
                 temp_array.clear();
                 temp_array.addAll(temp_parents);
-//                System.out.println(Arrays.toString(temp_parents));
                 saving_root.clear();
                 saving_root.addAll(temp_roots);
                 temp_roots.clear();
                 temp_parents.clear();
 
             } while (split_textFields.size() != 0);
-//            System.out.println(obj.root.left.left.key);
         }
         else {
             obj.insert(textFields.get(0).getText());
