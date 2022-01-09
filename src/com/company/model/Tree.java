@@ -1,9 +1,7 @@
 package com.company.model;
 
 import com.company.controller.DigiController;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -30,10 +28,6 @@ public class Tree {
     public Tree(){
         root = null;
     }
-    //delete a node from BST
-//    void deleteKey(int key) {
-//        root = delete_Recursive(root, key);
-//    }
 
     public void search (String[] search_val){
         System.out.println();
@@ -50,7 +44,7 @@ public class Tree {
         double main_distance = Math.pow(Double.parseDouble(search_val[0]) - Double.parseDouble(repair_shop[0]), 2) + Math.pow(Double.parseDouble(search_val[1]) - Double.parseDouble(repair_shop[1]), 2) + Math.pow(Double.parseDouble(search_val[2]) - Double.parseDouble(repair_shop[2]), 2);
         String[] destination = repair_shop;
         ArrayList<Node> same_distance = new ArrayList<>();
-        ArrayList<String[]> nearest = new ArrayList<>();
+//        ArrayList<String[]> nearest = new ArrayList<>();
         set_search_color(repair_shop, null);
 
         Node root_child = root;
@@ -137,71 +131,27 @@ public class Tree {
 
     void set_search_color (String[] left, String[] right){
 
-
-
         for (StackPane stackPane : DigiController.stackPanes){
+            set_the_color(left, stackPane);
+            set_the_color(right, stackPane);
+        }
+    }
 
-            if (left != null){
+    private void set_the_color(String[] pos, StackPane stackPane) {
+        if (pos != null){
 
-                Label label = (Label) stackPane.getChildren().get(1);
-                if (Arrays.equals(label.getText().split(" "), left)){
-                    Circle circle = (Circle)stackPane.getChildren().get(0);
-                    circle.setFill(Color.rgb(79, 75, 23));
-                }
-
+            Label label = (Label) stackPane.getChildren().get(1);
+            if (Arrays.equals(label.getText().split(" "), pos)){
+                Circle circle = (Circle)stackPane.getChildren().get(0);
+                circle.setFill(Color.rgb(79, 75, 23));
             }
-            if (right != null){
-                Label label = (Label) stackPane.getChildren().get(1);
 
-                if (Arrays.equals(label.getText().split(" "), right)){
-                    Circle circle = (Circle)stackPane.getChildren().get(0);
-                    circle.setFill(Color.rgb(79, 75, 23));
-                }
-            }
         }
     }
 
     public void remove (String val){
         DigiController.textFields.removeIf(x -> x.getText().equals(val));
     }
-
-    //recursive delete function
-//    Node delete_Recursive(Node root, int key)  {
-//        //tree is empty
-//        if (root == null)  return root;
-//
-//        //traverse the tree
-//        if (key < root.key)     //traverse left subtree
-//            root.left = delete_Recursive(root.left, key);
-//        else if (key > root.key)  //traverse right subtree
-//            root.right = delete_Recursive(root.right, key);
-//        else  {
-//            // node contains only one child
-//            if (root.left == null)
-//                return root.right;
-//            else if (root.right == null)
-//                return root.left;
-//
-//            // node has two children;
-//            //get inorder successor (min value in the right subtree)
-//            root.key = minValue(root.right);
-//
-//            // Delete the inorder successor
-//            root.right = delete_Recursive(root.right, root.key);
-//        }
-//        return root;
-//    }
-
-//    int minValue(Node root)  {
-//        //initially minval = root
-//        int minval = root.key;
-//        //find minval
-//        while (root.left != null)  {
-//            minval = root.left.key;
-//            root = root.left;
-//        }
-//        return minval;
-//    }
 
     // insert a node in BST
     public void insert(String key)  {
@@ -215,49 +165,8 @@ public class Tree {
             root = new Node(key);
             return root;
         }
-        //traverse the tree
-//        System.out.println(counter);
-//        System.out.println(key);
-//        if (counter %2 != 0)     //insert in the left subtree
-//            root.left = insert_Recursive(root.left, key, 2);
-//        else     //insert in the right subtree
-//            root.right = insert_Recursive(root.right, key, 3);
-        // return pointer
+
         return root;
     }
-
-    // method for inorder traversal of BST
-//    public void inorder() {
-//        inorder_Recursive(root);
-//    }
-
-    // recursively traverse the BST
-//    void inorder_Recursive(Node root) {
-//        if (root != null) {
-//            inorder_Recursive(root.left);
-//            System.out.print(root.key + " ");
-//            inorder_Recursive(root.right);
-//        }
-//    }
-
-//    boolean search(int key)  {
-//        root = search_Recursive(root, key);
-//        if (root!= null)
-//            return true;
-//        else
-//            return false;
-//    }
-
-    //recursive insert function
-//    Node search_Recursive(Node root, int key)  {
-//        // Base Cases: root is null or key is present at root
-//        if (root==null || root.key==key)
-//            return root;
-//        // val is greater than root's key
-//        if (root.key > key)
-//            return search_Recursive(root.left, key);
-//        // val is less than root's key
-//        return search_Recursive(root.right, key);
-//    }
 }
 
